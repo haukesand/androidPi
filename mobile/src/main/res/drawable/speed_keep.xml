@@ -1,0 +1,10 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" >
+        <bitmap
+            android:src="@drawable/speed"
+            android:tint="@color/blue"
+            android:layout_width="100dp"
+            />
+    </item>
+    <item android:drawable="@drawable/speed" android:layout_width="100dp"/>
+</selector>
