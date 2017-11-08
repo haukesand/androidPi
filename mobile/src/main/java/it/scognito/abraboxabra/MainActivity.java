@@ -37,14 +37,16 @@ public class MainActivity extends Activity {
 
     ImageView ivPushButton, ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
     TextView tvLog;
+/*
     Switch autoPushOnConnect;
+*/
 
     final int HANDLE_STATUS = 0;
     final int HANDLE_RET_MSG = 1;
 
     final int REQUEST_ENABLE_BT = 0;
     final int STATUS_DISCONNECTED = 0;
-    final int STATUS_CONNTECTED = 1;
+    final int STATUS_CONNECTED = 1;
     final int STATUS_BUSY = 2;
 
     private int status = STATUS_DISCONNECTED;
@@ -80,7 +82,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
 
@@ -91,7 +92,9 @@ public class MainActivity extends Activity {
         if (cl.firstRun())
             cl.getLogDialog().show();
 
+/*
         getAutoPushOnConnect();
+*/
         puppaLog(DEBUG_MSG_INFO, "App start!");
 
         /*
@@ -115,7 +118,7 @@ public class MainActivity extends Activity {
         if (!btInit())
             return;
 
-        if(status != STATUS_CONNTECTED) {
+        if(status != STATUS_CONNECTED) {
             startBT();
         }
         Log.d(TAG, "Resumed");
@@ -178,7 +181,7 @@ public class MainActivity extends Activity {
 
     public void setupViews() {
 
-        ivPushButton = (ImageView) findViewById(R.id.ivPushButton);
+        ivPushButton = (ImageView) findViewById(R.id.speed_up);
         ivStatus = (ImageView) findViewById(R.id.ivStatus);
         ivInfo = (ImageView) findViewById(R.id.ivInfo);
         /*
@@ -190,8 +193,9 @@ public class MainActivity extends Activity {
 
         tvLog = (TextView) findViewById(R.id.tvLog);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
-        tvLog.setVisibility(View.INVISIBLE);
+        //tvLog.setVisibility(View.VISIBLE);
 
+/*
         autoPushOnConnect = (Switch) findViewById(R.id.switch1);
         autoPushOnConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -202,6 +206,8 @@ public class MainActivity extends Activity {
                 }
             }
         });
+*/
+        //Actual push button event
 
         ivPushButton.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -216,8 +222,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        /*
-        ivRemoveDevice.setOnClickListener(new View.OnClickListener() {
+       /* ivRemoveDevice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mConnectedThread != null) {
                     mConnectedThread.write("device_list".getBytes());
@@ -242,8 +247,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 selectBtDevice();
             }
-        });
-        */
+        });*/
 
         ivInfo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -284,25 +288,24 @@ public class MainActivity extends Activity {
         edit.apply();
     }
 
-    public void getAutoPushOnConnect() {
+/*    public void getAutoPushOnConnect() {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         autoPush = prefs.getBoolean("autopush", false);
         autoPushOnConnect.setChecked(autoPush);
     }
-
-    public void setAutoPushOnConnect(boolean autostart) {
+       public void setAutoPushOnConnect(boolean autostart) {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         Editor edit = prefs.edit();
         edit.putBoolean("autopush", autostart);
         edit.apply();
 
         autoPush = autostart;
-    }
+    }*/
 
     private void setStatus(int pstatus) {
 
         switch (pstatus) {
-            case STATUS_CONNTECTED:
+            case STATUS_CONNECTED:
                 ivStatus.setImageResource(android.R.drawable.presence_online);
                 break;
             case STATUS_DISCONNECTED:
@@ -655,8 +658,8 @@ public class MainActivity extends Activity {
             try {
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
-                parentHandler.sendMessage(parentHandler.obtainMessage(HANDLE_STATUS, STATUS_CONNTECTED));
-                //parentHandler.sendEmptyMessage(STATUS_CONNTECTED);
+                parentHandler.sendMessage(parentHandler.obtainMessage(HANDLE_STATUS, STATUS_CONNECTED));
+                //parentHandler.sendEmptyMessage(STATUS_CONNECTED);
 
             } catch (IOException e) {
                 parentHandler.sendMessage(parentHandler.obtainMessage(HANDLE_STATUS, STATUS_DISCONNECTED));
