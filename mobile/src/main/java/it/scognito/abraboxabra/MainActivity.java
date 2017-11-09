@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +35,19 @@ import java.util.UUID;
 public class MainActivity extends Activity {
 
     private final String TAG = "ABRABOXABRA";
-
-    ImageView ivPushButton, ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
+    public enum loop {
+        INF("INF"), OFF("OFF");
+        loop(String v){
+            value=v;
+        }
+        private String value;
+        public String getValue(){
+            return value;
+        }
+    }
+    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep;
+    SeekBar seekBarAngle , seekBarSpeed, seekBarSpeedUp, seekBarBreakStrength;
+    ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
     TextView tvLog;
 /*
     Switch autoPushOnConnect;
@@ -65,7 +77,7 @@ public class MainActivity extends Activity {
 
     private Handler messageHandler = new Handler() {
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case HANDLE_STATUS:
                     //super.handleMessage(msg);
                     //Log.d(TAG, "******* arg1: " + msg.arg1 + " arg2: " + msg.arg2  + " object: " + msg.obj.toString());
@@ -73,7 +85,7 @@ public class MainActivity extends Activity {
                     break;
                 case HANDLE_RET_MSG:
                     showServerDevices(msg.obj.toString());
-                    puppaLog(DEBUG_MSG_INFO, "HANDLE_RET_MSG: " +  msg.obj.toString());
+                    puppaLog(DEBUG_MSG_INFO, "HANDLE_RET_MSG: " + msg.obj.toString());
                     break;
             }
         }
@@ -106,19 +118,19 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         btStopService();
         Log.d(TAG, "Stopped");
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         if (!btInit())
             return;
 
-        if(status != STATUS_CONNECTED) {
+        if (status != STATUS_CONNECTED) {
             startBT();
         }
         Log.d(TAG, "Resumed");
@@ -181,7 +193,26 @@ public class MainActivity extends Activity {
 
     public void setupViews() {
 
-        ivPushButton = (ImageView) findViewById(R.id.speed_up);
+        start_moving = (ImageView) findViewById(R.id.start_moving);
+        move_backwards = (ImageView) findViewById(R.id.move_backwards);
+        lane_left = (ImageView) findViewById(R.id.lane_left);
+        lane_right = (ImageView) findViewById(R.id.lane_right);
+        depart_todestination = (ImageView) findViewById(R.id.depart_todestination);
+        arrive_destination = (ImageView) findViewById(R.id.arrive_destination);
+        slow_down = (ImageView) findViewById(R.id.slow_down);
+        speed_up = (ImageView) findViewById(R.id.speed_up);
+        turn_right = (ImageView) findViewById(R.id.turn_right);
+        turn_left = (ImageView) findViewById(R.id.turn_left);
+        highway_enter = (ImageView) findViewById(R.id.highway_enter);
+        highway_leave = (ImageView) findViewById(R.id.highway_leave);
+        wait_pedestrian = (ImageView) findViewById(R.id.wait_pedestrian);
+        wait_trafficlight = (ImageView) findViewById(R.id.wait_trafficlight);
+        uneven_road = (ImageView) findViewById(R.id.uneven_road);
+        swerve_left = (ImageView) findViewById(R.id.swerve_left);
+        brake_now = (ImageView) findViewById(R.id.brake_now);
+        speed_keep = (ImageView) findViewById(R.id.speed_keep);
+
+
         ivStatus = (ImageView) findViewById(R.id.ivStatus);
         ivInfo = (ImageView) findViewById(R.id.ivInfo);
         /*
@@ -209,12 +240,25 @@ public class MainActivity extends Activity {
 */
         //Actual push button event
 
-        ivPushButton.setOnTouchListener(new View.OnTouchListener() {
+        start_moving.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
-                ivPushButton.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
+                start_moving.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     if (mConnectedThread != null) {
-                        mConnectedThread.write("openclose".getBytes());
+                        mConnectedThread.write(composeMessage("start_moving",1,180).getBytes());
+                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                    }
+                }
+                return true;
+            }
+        });
+
+        move_backwards.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                move_backwards.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (mConnectedThread != null) {
+                        mConnectedThread.write(composeMessage("move_backwards",loop.INF,180).getBytes());
                         puppaLog(DEBUG_MSG_INFO, "Sending command");
                     }
                 }
@@ -267,6 +311,18 @@ public class MainActivity extends Activity {
                 }
             }
         });
+    }
+
+
+    //compose messages
+    private String composeMessage (String Mode, int loopCount, int angle){
+        String Message = new String("<"+ Mode + ",loop="+loopCount+",angle="+angle+">");
+        return Message;
+    }
+
+    private String composeMessage (String Mode, loop loopCount, int angle){
+        String Message = new String("<"+ Mode + ",loop="+loopCount.getValue()+",angle="+angle+">");
+        return Message;
     }
 
     private void setBtServer(String addr) {
@@ -324,7 +380,7 @@ public class MainActivity extends Activity {
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        if(mBluetoothAdapter == null){
+        if (mBluetoothAdapter == null) {
             Toast.makeText(this, R.string.device_no_bt, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -359,8 +415,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void showServerDevices(String allDevices){
-        if(allDevices.equalsIgnoreCase("none")){
+    private void showServerDevices(String allDevices) {
+        if (allDevices.equalsIgnoreCase("none")) {
             Toast.makeText(this, R.string.no_devices_on_server, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -376,7 +432,7 @@ public class MainActivity extends Activity {
         for (String dev : devices) {
             btDevicesAddrArray[i] = (dev.substring(0, 17));
             btDevicesNameArray[i] = (dev.substring(18, dev.length()));
-            Log.d(TAG, "->"+btDevicesNameArray[i]+"<-->"+btDevicesAddrArray[i]+"<-");
+            Log.d(TAG, "->" + btDevicesNameArray[i] + "<-->" + btDevicesAddrArray[i] + "<-");
             i++;
         }
 
@@ -386,10 +442,10 @@ public class MainActivity extends Activity {
                 puppaLog(DEBUG_MSG_INFO, "Selected: " + btDevicesNameArray[item] + "(" + btDevicesAddrArray[item] + ")");
                 if (mConnectedThread != null) {
                     mConnectedThread.write(("remove_device " + btDevicesAddrArray[item]).getBytes());
-                    puppaLog(DEBUG_MSG_INFO, "Sending command: "+ "remove_device " + btDevicesAddrArray[item]);
+                    puppaLog(DEBUG_MSG_INFO, "Sending command: " + "remove_device " + btDevicesAddrArray[item]);
                 }
-               // setBtServer(btDevicesAddrArray[item]);
-               // setAbraboxabraAddress(btDevicesAddrArray[item]);
+                // setBtServer(btDevicesAddrArray[item]);
+                // setAbraboxabraAddress(btDevicesAddrArray[item]);
                 dialog.dismiss();
             }
         });
@@ -410,7 +466,7 @@ public class MainActivity extends Activity {
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        if(mBluetoothAdapter == null){
+        if (mBluetoothAdapter == null) {
             Toast.makeText(this, R.string.device_no_bt, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -437,7 +493,7 @@ public class MainActivity extends Activity {
         for (BluetoothDevice device : pairedDevices) {
             btDevicesNameArray[i] = device.getName() == null ? " " : device.getName();
             btDevicesAddrArray[i] = device.getAddress();
-            Log.d(TAG, "name: " + device.getName() + " address: " + device.getAddress() );
+            Log.d(TAG, "name: " + device.getName() + " address: " + device.getAddress());
             i++;
         }
 
@@ -570,7 +626,7 @@ public class MainActivity extends Activity {
             // Use a temporary object that is later assigned to mmSocket,
             // because mmSocket is final
             BluetoothSocket tmp = null;
-         //   mmDevice = device;
+            //   mmDevice = device;
             this.parentHandler = parentHandler;
 
             // Get a BluetoothSocket to connect with the given BluetoothDevice
@@ -598,7 +654,6 @@ public class MainActivity extends Activity {
                 msgObj.setData(b);
                 handler.sendMessage(msgObj);
                 */
-
 
 
                 // Connect the device through the socket. This will block
@@ -674,7 +729,7 @@ public class MainActivity extends Activity {
             byte[] buffer = new byte[1024]; // buffer store for the stream
             int bytes; // bytes returned from read()
 
-            if(autoPush)
+            if (autoPush)
                 write("openclose".getBytes());
 
             // Keep listening to the InputStream until an exception occurs
