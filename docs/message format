@@ -3,8 +3,8 @@
 <move_backwards,loop=INF,angle=180>
 <move_backwards,loop=OFF>
 
-<lane_left,loop=2.0>
-<lane_right,loop=2.0>
+<lane_left,loop=1>
+<lane_right,loop=1>
 
 <depart_todestination,loop=1>
 <arrive_destination,loop=1>
