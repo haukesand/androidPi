@@ -183,23 +183,25 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="120dp">
 
             <ImageView
                 android:id="@+id/speed_up"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textspeed_up"
-                android:src="@drawable/speed_up" />
+                android:src="@drawable/speed_up"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true" />
 
             <SeekBar
-                android:id="@+id/seekBar4"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="wrap_content"
+                android:id="@+id/seekBarSpeedUp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:max="10"
-                android:progress="3" />
+                android:max="5"
+                android:progress="3"
+                android:layout_above="@+id/textspeed_up"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/textspeed_up"
@@ -404,19 +406,22 @@
 
             <ImageView
                 android:id="@+id/brake_now"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textbrake_now"
-                android:src="@drawable/brake_now" />
+                android:src="@drawable/brake_now"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true"
+    />
 
             <SeekBar
-                android:id="@+id/seekBar2"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
-                android:layout_width="wrap_content"
+                android:id="@+id/seekBarBreakStrength"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:max="10"
-                android:progress="3" />
+                android:max="5"
+                android:progress="3"
+                android:layout_above="@+id/textbrake_now"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/textbrake_now"
@@ -436,16 +441,21 @@
 
             <ImageView
                 android:id="@+id/steer_angle"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_alignStart="@+id/textsteer_angle"
                 android:src="@drawable/steer_angle" />
 
             <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/seekBarAngle"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/textsteer_angle"
+                android:max="360"
+                android:progress="180"/>
 
             <TextView
                 android:id="@+id/textsteer_angle"
@@ -465,16 +475,22 @@
 
             <ImageView
                 android:id="@+id/speed_keep"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true"
                 android:layout_alignStart="@+id/textspeed_keep"
                 android:src="@drawable/speed_keep" />
 
             <SeekBar
-                android:id="@+id/seekBar3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/seekBarSpeed"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textspeed_keep"
+                android:layout_alignParentStart="true"
+                android:max="85"
+                android:progress="10"/>
 
             <TextView
                 android:id="@+id/textspeed_keep"
@@ -505,7 +521,8 @@
             android:text="LOG WINDOW"
             android:textColor="@android:color/black"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/ivInfo" />
+            android:layout_toEndOf="@+id/ivInfo"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/ivStatus"
