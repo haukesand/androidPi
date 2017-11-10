@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
     ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep;
     SeekBar seekBarAngle, seekBarSpeed, seekBarSpeedUp, seekBarBreakStrength;
     ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
+    int steeringAngle, speed, acceleration, breakStrength;
     TextView tvLog;
     String btServerAddr = null;
     BluetoothAdapter mBluetoothAdapter;
@@ -195,6 +196,10 @@ public class MainActivity extends Activity {
         brake_now = (ImageView) findViewById(R.id.brake_now);
         speed_keep = (ImageView) findViewById(R.id.speed_keep);
 
+        seekBarAngle = (SeekBar) findViewById(R.id.seekBarAngle);
+        seekBarSpeed = (SeekBar) findViewById(R.id.seekBarSpeed);
+        seekBarSpeedUp = (SeekBar) findViewById(R.id.seekBarSpeedUp);
+        seekBarBreakStrength = (SeekBar) findViewById(R.id.seekBarBreakStrength);
 
         ivStatus = (ImageView) findViewById(R.id.ivStatus);
         ivInfo = (ImageView) findViewById(R.id.ivInfo);
@@ -221,13 +226,34 @@ public class MainActivity extends Activity {
             }
         });
 */
+        seekBarAngle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                steeringAngle = progress;
+                /*t1.setTextSize(progress);
+                Toast.makeText(getApplicationContext(), String.valueOf(progress),Toast.LENGTH_LONG).show();*/
+
+            }
+        });
+
         //Actual push button event
 
         start_moving.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 start_moving.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("start_moving", loop.ONE, 180));
+                    sendMessage(composeMessage("start_moving", loop.ONE, steeringAngle));
                 }
                 return true;
             }
@@ -239,7 +265,7 @@ public class MainActivity extends Activity {
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     String message;
                     if (!move_backwards.isActivated()) {
-                        message = composeMessage("move_backwards", loop.INF, 180);
+                        message = composeMessage("move_backwards", loop.INF, steeringAngle);
                         move_backwards.setActivated(true);
                     } else {
                         message = composeMessage("move_backwards", loop.OFF);
@@ -316,7 +342,7 @@ public class MainActivity extends Activity {
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     String message;
                     if (!speed_up.isActivated()) {
-                        message = composeMessage("speed_up", loop.INF, 50, 180);
+                        message = composeMessage("speed_up", loop.INF, 50, steeringAngle);
                         speed_up.setActivated(true);
                     } else {
                         message = composeMessage("speed_up", loop.OFF);
@@ -453,7 +479,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 brake_now.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("brake_now", 2.0f, 180, 50));
+                    sendMessage(composeMessage("brake_now", 2.0f, 50, steeringAngle));
                 }
                 return true;
             }
@@ -465,7 +491,7 @@ public class MainActivity extends Activity {
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     String message;
                     if (!speed_keep.isActivated()) {
-                        message = composeMessage("speed_keep", loop.INF, 75, 180);
+                        message = composeMessage("speed_keep", loop.INF, 75, steeringAngle);
                         speed_keep.setActivated(true);
                     } else {
                         message = composeMessage("speed_keep", loop.OFF);
