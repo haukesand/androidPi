@@ -5,5 +5,8 @@
             android:tint="@color/blue"
             />
     </item>
+    <item android:state_activated="true">
+        <bitmap android:layout_width="100dp" android:src="@drawable/rightlane" android:tint="@color/green" />
+    </item>
     <item android:drawable="@drawable/rightlane"/>
 </selector>

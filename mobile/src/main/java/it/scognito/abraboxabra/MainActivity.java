@@ -30,51 +30,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 public class MainActivity extends Activity {
 
-    private final String TAG = "ABRABOXABRA";
-    public enum loop {
-        INF("INF"), OFF("OFF"), ONE("ONE");
-        loop(String v){
-            value=v;
-        }
-        private String value;
-        public String getValue(){
-            return value;
-        }
-    }
-    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep;
-    SeekBar seekBarAngle , seekBarSpeed, seekBarSpeedUp, seekBarBreakStrength;
-    ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
-    TextView tvLog;
-/*
-    Switch autoPushOnConnect;
-*/
-
     final int HANDLE_STATUS = 0;
     final int HANDLE_RET_MSG = 1;
-
     final int REQUEST_ENABLE_BT = 0;
     final int STATUS_DISCONNECTED = 0;
     final int STATUS_CONNECTED = 1;
     final int STATUS_BUSY = 2;
-
-    private int status = STATUS_DISCONNECTED;
-
+    /*
+        Switch autoPushOnConnect;
+    */
     final String myUuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee";
-    String btServerAddr = null;
-
     final int DEBUG_MSG_ERROR = 0, DEBUG_MSG_INFO = 1;
-
+    private final String TAG = "ABRABOXABRA";
+    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep;
+    SeekBar seekBarAngle, seekBarSpeed, seekBarSpeedUp, seekBarBreakStrength;
+    ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
+    TextView tvLog;
+    String btServerAddr = null;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothDevice btDevice = null;
     boolean autoPush = false;
-
+    private int status = STATUS_DISCONNECTED;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-
     private Handler messageHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -244,10 +227,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 start_moving.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("start_moving",loop.ONE,180).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("start_moving", loop.ONE, 180));
                 }
                 return true;
             }
@@ -256,18 +236,16 @@ public class MainActivity extends Activity {
         move_backwards.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 move_backwards.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!move_backwards.isActivated()){
-                        mConnectedThread.write(composeMessage("move_backwards",loop.INF,180).getBytes());
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!move_backwards.isActivated()) {
+                        message = composeMessage("move_backwards", loop.INF, 180);
                         move_backwards.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("move_backwards",loop.OFF).getBytes());
-                            move_backwards.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                    } else {
+                        message = composeMessage("move_backwards", loop.OFF);
+                        move_backwards.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -277,10 +255,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 lane_left.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("lane_left",loop.ONE).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("lane_left", loop.ONE));
                 }
                 return true;
             }
@@ -290,10 +265,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 lane_right.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("lane_right",loop.ONE).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("lane_right", loop.ONE));
                 }
                 return true;
             }
@@ -303,10 +275,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 depart_todestination.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("depart_todestination",loop.ONE).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("depart_todestination", loop.ONE));
                 }
                 return true;
             }
@@ -316,10 +285,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 arrive_destination.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("arrive_destination",loop.ONE).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("arrive_destination", loop.ONE));
                 }
                 return true;
             }
@@ -328,18 +294,16 @@ public class MainActivity extends Activity {
         slow_down.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 slow_down.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!slow_down.isActivated()){
-                            mConnectedThread.write(composeMessage("slow_down",loop.INF).getBytes());
-                            slow_down.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("slow_down",loop.OFF).getBytes());
-                            slow_down.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!slow_down.isActivated()) {
+                        message = composeMessage("slow_down", loop.INF);
+                        slow_down.setActivated(true);
+                    } else {
+                        message = composeMessage("slow_down", loop.OFF);
+                        slow_down.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -349,18 +313,16 @@ public class MainActivity extends Activity {
         speed_up.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 speed_up.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!speed_up.isActivated()){
-                            mConnectedThread.write(composeMessage("speed_up",loop.INF,50,180).getBytes());
-                            speed_up.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("speed_up",loop.OFF).getBytes());
-                            speed_up.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!speed_up.isActivated()) {
+                        message = composeMessage("speed_up", loop.INF, 50, 180);
+                        speed_up.setActivated(true);
+                    } else {
+                        message = composeMessage("speed_up", loop.OFF);
+                        speed_up.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -369,18 +331,16 @@ public class MainActivity extends Activity {
         turn_left.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 turn_left.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!turn_left.isActivated()){
-                            mConnectedThread.write(composeMessage("turn_left",loop.INF).getBytes());
-                            turn_left.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("turn_left",loop.OFF).getBytes());
-                            turn_left.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!turn_left.isActivated()) {
+                        message = composeMessage("turn_left", loop.INF);
+                        turn_left.setActivated(true);
+                    } else {
+                        message = composeMessage("turn_left", loop.OFF);
+                        turn_left.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -389,18 +349,16 @@ public class MainActivity extends Activity {
         turn_right.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 turn_right.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!turn_right.isActivated()){
-                            mConnectedThread.write(composeMessage("turn_right",loop.INF).getBytes());
-                            turn_right.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("turn_right",loop.OFF).getBytes());
-                            turn_right.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!turn_right.isActivated()) {
+                        message = composeMessage("turn_right", loop.INF);
+                        turn_right.setActivated(true);
+                    } else {
+                        message = composeMessage("turn_right", loop.OFF);
+                        turn_right.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -410,10 +368,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 highway_enter.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("highway_enter",3.0f).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("highway_enter", 3.0f));
                 }
                 return true;
             }
@@ -423,10 +378,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 highway_leave.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("highway_leave",3.0f).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("highway_leave", 3.0f));
                 }
                 return true;
             }
@@ -435,18 +387,16 @@ public class MainActivity extends Activity {
         wait_trafficlight.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 wait_trafficlight.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!wait_trafficlight.isActivated()){
-                            mConnectedThread.write(composeMessage("wait_trafficlight",loop.INF).getBytes());
-                            wait_trafficlight.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("wait_trafficlight",loop.OFF).getBytes());
-                            wait_trafficlight.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!wait_trafficlight.isActivated()) {
+                        message = composeMessage("wait_trafficlight", loop.INF);
+                        wait_trafficlight.setActivated(true);
+                    } else {
+                        message = composeMessage("wait_trafficlight", loop.OFF);
+                        wait_trafficlight.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -455,19 +405,18 @@ public class MainActivity extends Activity {
         wait_pedestrian.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 wait_pedestrian.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!wait_pedestrian.isActivated()){
-                            mConnectedThread.write(composeMessage("wait_pedestrian",loop.INF).getBytes());
-                            wait_pedestrian.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("wait_pedestrian",loop.OFF).getBytes());
-                            wait_pedestrian.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!wait_pedestrian.isActivated()) {
+                        message = composeMessage("wait_pedestrian", loop.INF);
+                        wait_pedestrian.setActivated(true);
+                    } else {
+                        message = composeMessage("wait_pedestrian", loop.OFF);
+                        wait_pedestrian.setActivated(false);
                     }
+                    sendMessage(message);
                 }
+
                 return true;
             }
         });
@@ -475,18 +424,16 @@ public class MainActivity extends Activity {
         uneven_road.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 uneven_road.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!uneven_road.isActivated()){
-                            mConnectedThread.write(composeMessage("uneven_road",loop.INF).getBytes());
-                            uneven_road.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("uneven_road",loop.OFF).getBytes());
-                            uneven_road.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!uneven_road.isActivated()) {
+                        message = composeMessage("uneven_road", loop.INF);
+                        uneven_road.setActivated(true);
+                    } else {
+                        message = composeMessage("uneven_road", loop.OFF);
+                        uneven_road.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -496,10 +443,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 swerve_left.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("swerve_left",loop.ONE).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("swerve_left", loop.ONE));
                 }
                 return true;
             }
@@ -509,10 +453,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 brake_now.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (mConnectedThread != null) {
-                        mConnectedThread.write(composeMessage("brake_now",2.0f,180,50).getBytes());
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
-                    }
+                    sendMessage(composeMessage("brake_now", 2.0f, 180, 50));
                 }
                 return true;
             }
@@ -521,18 +462,16 @@ public class MainActivity extends Activity {
         speed_keep.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 speed_keep.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN ) {
-                    if (mConnectedThread != null) {
-                        if(!speed_keep.isActivated()){
-                            mConnectedThread.write(composeMessage("speed_keep",loop.INF,75,180).getBytes());
-                            speed_keep.setActivated(true);
-                        }
-                        else{
-                            mConnectedThread.write(composeMessage("speed_keep",loop.OFF).getBytes());
-                            speed_keep.setActivated(false);
-                        }
-                        puppaLog(DEBUG_MSG_INFO, "Sending command");
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!speed_keep.isActivated()) {
+                        message = composeMessage("speed_keep", loop.INF, 75, 180);
+                        speed_keep.setActivated(true);
+                    } else {
+                        message = composeMessage("speed_keep", loop.OFF);
+                        speed_keep.setActivated(false);
                     }
+                    sendMessage(message);
                 }
                 return true;
             }
@@ -586,30 +525,42 @@ public class MainActivity extends Activity {
         });
     }
 
+    private String composeMessage(String Mode, loop loopCount, int strength, int angle) {
+        String Message = ("<" + Mode + ",loop=" + loopCount.getValue() + ",strength=" + strength + ",angle=" + angle + ">");
+        return Message;
+    }
+
 
     //compose messages
 
-    private String composeMessage (String Mode, loop loopCount, int strength, int angle){
-        String Message = ("<"+ Mode + ",loop="+ loopCount.getValue()+ ",strength="+ strength+",angle="+angle+">");
+    private String composeMessage(String Mode, float loopCount, int strength, int angle) {
+        String Message = ("<" + Mode + ",loop=" + loopCount + ",strength=" + strength + ",angle=" + angle + ">");
         return Message;
     }
 
-    private String composeMessage (String Mode, float loopCount, int strength, int angle){
-        String Message = ("<"+ Mode + ",loop="+ loopCount + ",strength="+ strength+",angle="+angle+">");
+    private String composeMessage(String Mode, float loopCount) {
+        String Message = ("<" + Mode + ",loop=" + loopCount + ">");
         return Message;
     }
 
-    private String composeMessage (String Mode, float loopCount){
-        String Message =  ("<"+ Mode + ",loop="+loopCount+ ">");
+    private String composeMessage(String Mode, loop loopCount, int angle) {
+        String Message = ("<" + Mode + ",loop=" + loopCount.getValue() + ",angle=" + angle + ">");
         return Message;
     }
-    private String composeMessage (String Mode, loop loopCount, int angle){
-        String Message =  ("<"+ Mode + ",loop="+loopCount.getValue()+",angle="+angle+">");
+
+    private String composeMessage(String Mode, loop loopCount) {
+        String Message = ("<" + Mode + ",loop=" + loopCount.getValue() + ">");
         return Message;
     }
-    private String composeMessage (String Mode, loop loopCount){
-        String Message =  ("<"+ Mode + ",loop="+loopCount.getValue()+">");
-        return Message;
+
+    private void sendMessage(String message) {
+        if (mConnectedThread != null) {
+            mConnectedThread.write(message.getBytes());
+            puppaLog(DEBUG_MSG_INFO, "send: " + message);
+        } else {
+            puppaLog(DEBUG_MSG_INFO, message);
+        }
+
     }
 
     private void setBtServer(String addr) {
@@ -631,20 +582,6 @@ public class MainActivity extends Activity {
         edit.apply();
     }
 
-/*    public void getAutoPushOnConnect() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        autoPush = prefs.getBoolean("autopush", false);
-        autoPushOnConnect.setChecked(autoPush);
-    }
-       public void setAutoPushOnConnect(boolean autostart) {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        Editor edit = prefs.edit();
-        edit.putBoolean("autopush", autostart);
-        edit.apply();
-
-        autoPush = autostart;
-    }*/
-
     private void setStatus(int pstatus) {
 
         switch (pstatus) {
@@ -662,6 +599,20 @@ public class MainActivity extends Activity {
         }
         status = pstatus;
     }
+
+/*    public void getAutoPushOnConnect() {
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        autoPush = prefs.getBoolean("autopush", false);
+        autoPushOnConnect.setChecked(autoPush);
+    }
+       public void setAutoPushOnConnect(boolean autostart) {
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        Editor edit = prefs.edit();
+        edit.putBoolean("autopush", autostart);
+        edit.apply();
+
+        autoPush = autostart;
+    }*/
 
     private void askShutdown() {
         AlertDialog dialog;
@@ -900,6 +851,20 @@ public class MainActivity extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public enum loop {
+        INF("INF"), OFF("OFF"), ONE("ONE");
+
+        private String value;
+
+        loop(String v) {
+            value = v;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
