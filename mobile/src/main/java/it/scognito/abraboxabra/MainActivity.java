@@ -48,10 +48,10 @@ public class MainActivity extends Activity {
     final int DEBUG_MSG_ERROR = 0, DEBUG_MSG_INFO = 1;
     private final String TAG = "ABRABOXABRA";
     ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep;
-    SeekBar seekBarAngle, seekBarSpeed, seekBarSpeedUp, seekBarBreakStrength;
+    SeekBar seekBarAngle, seekBarSpeed, seekBarSpeedUp, seekBarBrakeStrength;
     ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
-    int steeringAngle, speed, acceleration, breakStrength;
-    TextView tvLog;
+    int steeringAngle = 180, speed = 20, acceleration = 3, brakeStrength = 3;
+    TextView tvLog, value_speed, value_steer_angle;
     String btServerAddr = null;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothDevice btDevice = null;
@@ -84,9 +84,6 @@ public class MainActivity extends Activity {
         getAbraboxabraAddress();
         setupViews();
 
-        ChangeLog cl = new ChangeLog(this);
-        if (cl.firstRun())
-            cl.getLogDialog().show();
 
 /*
         getAutoPushOnConnect();
@@ -199,7 +196,7 @@ public class MainActivity extends Activity {
         seekBarAngle = (SeekBar) findViewById(R.id.seekBarAngle);
         seekBarSpeed = (SeekBar) findViewById(R.id.seekBarSpeed);
         seekBarSpeedUp = (SeekBar) findViewById(R.id.seekBarSpeedUp);
-        seekBarBreakStrength = (SeekBar) findViewById(R.id.seekBarBreakStrength);
+        seekBarBrakeStrength = (SeekBar) findViewById(R.id.seekBarBreakStrength);
 
         ivStatus = (ImageView) findViewById(R.id.ivStatus);
         ivInfo = (ImageView) findViewById(R.id.ivInfo);
@@ -209,6 +206,8 @@ public class MainActivity extends Activity {
         ivPairing = (ImageView) findViewById(R.id.ivEnablePairing);
         ivRemoveDevice = (ImageView) findViewById(R.id.ivRemoveDevice);
         */
+        value_speed = (TextView) findViewById(R.id.value_speed);
+        value_steer_angle = (TextView) findViewById(R.id.value_steer_angle);
 
         tvLog = (TextView) findViewById(R.id.tvLog);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
@@ -226,27 +225,86 @@ public class MainActivity extends Activity {
             }
         });
 */
+        //seekbars
         seekBarAngle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 steeringAngle = progress;
-                /*t1.setTextSize(progress);
-                Toast.makeText(getApplicationContext(), String.valueOf(progress),Toast.LENGTH_LONG).show();*/
+                value_steer_angle.setText(progress+"°");
 
             }
         });
+        seekBarBrakeStrength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                brakeStrength = progress;
+                }
+        });
+        seekBarSpeedUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                acceleration = progress;
+             }
+        });
+        seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                speed = progress;
+                value_speed.setText(progress+" mph");
+            }
+        });
+
+        seekBarBrakeStrength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                brakeStrength = progress;
+            }
+        });
         //Actual push button event
 
         start_moving.setOnTouchListener(new View.OnTouchListener() {
@@ -342,7 +400,7 @@ public class MainActivity extends Activity {
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     String message;
                     if (!speed_up.isActivated()) {
-                        message = composeMessage("speed_up", loop.INF, 50, steeringAngle);
+                        message = composeMessage("speed_up", loop.INF, acceleration, steeringAngle);
                         speed_up.setActivated(true);
                     } else {
                         message = composeMessage("speed_up", loop.OFF);
@@ -479,7 +537,7 @@ public class MainActivity extends Activity {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 brake_now.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("brake_now", 2.0f, 50, steeringAngle));
+                    sendMessage(composeMessage("brake_now", 2.0f, brakeStrength, steeringAngle));
                 }
                 return true;
             }
@@ -491,7 +549,7 @@ public class MainActivity extends Activity {
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     String message;
                     if (!speed_keep.isActivated()) {
-                        message = composeMessage("speed_keep", loop.INF, 75, steeringAngle);
+                        message = composeMessage("speed_keep", loop.INF, speed, steeringAngle);
                         speed_keep.setActivated(true);
                     } else {
                         message = composeMessage("speed_keep", loop.OFF);

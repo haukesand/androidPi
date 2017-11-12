@@ -1,527 +1,397 @@
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:fillViewport="true"
-    android:scrollbars="horizontal|vertical">
+    android:scrollbars="horizontal|vertical">-->
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <GridLayout xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:columnCount="7"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="it.scognito.abraboxabra.MainActivity">
-
-
-        <RelativeLayout
+        android:background="@android:color/white">
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
 
-            <ImageView
-                android:id="@+id/start_moving"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textstart"
-                android:src="@drawable/start_moving" />
-
-            <TextView
-                android:id="@+id/textstart"
+            <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/start_moving"
-                android:layout_centerHorizontal="true"
-                android:text="Start moving"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:background="@android:color/white"
+                android:columnCount="6"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="it.scognito.abraboxabra.MainActivity">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/move_backwards"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textmove_backwards"
-                android:src="@drawable/move_backwards" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textmove_backwards"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/move_backwards"
-                android:layout_centerHorizontal="true"
-                android:text="Drive \nbackwards"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/start_moving"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textstart"
+                        android:src="@drawable/start_moving" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textstart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/start_moving"
+                        android:layout_centerHorizontal="true"
+                        android:text="Start moving"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/lane_left"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textleftlane"
-                android:src="@drawable/lane_left" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textleftlane"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/lane_left"
-                android:layout_centerHorizontal="true"
-                android:text="Into \nleft lane"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/move_backwards"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textmove_backwards"
+                        android:src="@drawable/move_backwards" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textmove_backwards"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/move_backwards"
+                        android:layout_centerHorizontal="true"
+                        android:text="Drive \nbackwards"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/lane_right"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textrightlane"
-                android:src="@drawable/lane_right" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textrightlane"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/lane_right"
-                android:layout_centerHorizontal="true"
-                android:text="Into \nright lane"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/lane_left"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textleftlane"
+                        android:src="@drawable/lane_left" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textleftlane"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lane_left"
+                        android:layout_centerHorizontal="true"
+                        android:text="Into \nleft lane"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/arrive_destination"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textarrive_destination"
-                android:src="@drawable/arrive_destination" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textarrive_destination"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/arrive_destination"
-                android:layout_centerHorizontal="true"
-                android:text="Arrive \ndestination"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/lane_right"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textrightlane"
+                        android:src="@drawable/lane_right" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textrightlane"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lane_right"
+                        android:layout_centerHorizontal="true"
+                        android:text="Into \nright lane"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/depart_todestination"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textdepart_todestination"
-                android:src="@drawable/depart_todestination" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textdepart_todestination"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/depart_todestination"
-                android:layout_centerHorizontal="true"
-                android:text="Depart to \ndestination"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/arrive_destination"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textarrive_destination"
+                        android:src="@drawable/arrive_destination" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textarrive_destination"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/arrive_destination"
+                        android:layout_centerHorizontal="true"
+                        android:text="Arrive \ndestination"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/slow_down"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textslow_down"
-                android:src="@drawable/slow_down" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textslow_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/slow_down"
-                android:layout_centerHorizontal="true"
-                android:text="Slow down"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/depart_todestination"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textdepart_todestination"
+                        android:src="@drawable/depart_todestination" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textdepart_todestination"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/depart_todestination"
+                        android:layout_centerHorizontal="true"
+                        android:text="Depart to \ndestination"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/speed_up"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/speed_up" />
 
-            <SeekBar
-                android:id="@+id/seekBarSpeedUp"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/textspeed_up"
-                android:layout_alignParentStart="true"
-                android:max="5"
-                android:progress="3"
-                android:thumb="@drawable/thumb" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textspeed_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/speed_up"
-                android:layout_centerHorizontal="true"
-                android:text="Speed up"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/turn_left"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textturn_left"
+                        android:src="@drawable/turn_left" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textturn_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/turn_left"
+                        android:layout_centerHorizontal="true"
+                        android:text="Turn left"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/turn_left"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textturn_left"
-                android:src="@drawable/turn_left" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textturn_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/turn_left"
-                android:layout_centerHorizontal="true"
-                android:text="Turn left"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/turn_right"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/turn_right"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textturn_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/turn_right"
+                        android:layout_centerHorizontal="true"
+                        android:text="Turn right"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/turn_right"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textturn_right"
-                android:src="@drawable/turn_right" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textturn_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/turn_right"
-                android:layout_centerHorizontal="true"
-                android:text="Turn right"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/highway_enter"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/texthighway_enter"
+                        android:src="@drawable/highway_enter" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/texthighway_enter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/highway_enter"
+                        android:layout_centerHorizontal="true"
+                        android:text="Enter \nhighway"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/highway_enter"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/texthighway_enter"
-                android:src="@drawable/highway_enter" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/texthighway_enter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/highway_enter"
-                android:layout_centerHorizontal="true"
-                android:text="Enter \nhighway"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/highway_leave"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/texthighway_leave"
+                        android:src="@drawable/highway_leave" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/texthighway_leave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/highway_leave"
+                        android:layout_centerHorizontal="true"
+                        android:text="Leave \nhighway"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/highway_leave"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/texthighway_leave"
-                android:src="@drawable/highway_leave" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/texthighway_leave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/highway_leave"
-                android:layout_centerHorizontal="true"
-                android:text="Leave \nhighway"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/wait_trafficlight"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textwait_trafficlight"
+                        android:src="@drawable/wait_trafficlight" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textwait_trafficlight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/wait_trafficlight"
+                        android:layout_centerHorizontal="true"
+                        android:text="Wait \ntraffic light"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/wait_trafficlight"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textwait_trafficlight"
-                android:src="@drawable/wait_trafficlight" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textwait_trafficlight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/wait_trafficlight"
-                android:layout_centerHorizontal="true"
-                android:text="Wait \ntraffic light"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/wait_pedestrian"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textwait_pedestrian"
+                        android:src="@drawable/wait_pedestrian" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textwait_pedestrian"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/wait_pedestrian"
+                        android:layout_centerHorizontal="true"
+                        android:text="Wait \npedestrian"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/wait_pedestrian"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textwait_pedestrian"
-                android:src="@drawable/wait_pedestrian" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textwait_pedestrian"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/wait_pedestrian"
-                android:layout_centerHorizontal="true"
-                android:text="Wait \npedestrian"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/uneven_road"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textuneven_road"
+                        android:src="@drawable/uneven_road" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textuneven_road"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/uneven_road"
+                        android:layout_centerHorizontal="true"
+                        android:text="Bumpy road"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/uneven_road"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textuneven_road"
-                android:src="@drawable/uneven_road" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textuneven_road"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/uneven_road"
-                android:layout_centerHorizontal="true"
-                android:text="Bumpy road"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/swerve_left"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/textswerve_left"
+                        android:src="@drawable/swerve_left" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textswerve_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/swerve_left"
+                        android:layout_centerHorizontal="true"
+                        android:text="Swerve left"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/swerve_left"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textswerve_left"
-                android:src="@drawable/swerve_left" />
+                    <ImageView
+                        android:id="@+id/slow_down"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/slow_down"
 
-            <TextView
-                android:id="@+id/textswerve_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/swerve_left"
-                android:layout_centerHorizontal="true"
-                android:text="Swerve left"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textslow_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/slow_down"
+                        android:layout_centerHorizontal="true"
+                        android:text="Slow down"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/brake_now"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/brake_now" />
+            </GridLayout>
 
-            <SeekBar
-                android:id="@+id/seekBarBreakStrength"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/textbrake_now"
-                android:layout_alignParentStart="true"
-                android:max="5"
-                android:progress="3"
-                android:thumb="@drawable/thumb" />
-
-            <TextView
-                android:id="@+id/textbrake_now"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/brake_now"
-                android:layout_centerHorizontal="true"
-                android:text="Brake now"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/steer_angle"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_alignStart="@+id/textsteer_angle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/steer_angle" />
-
-            <SeekBar
-                android:id="@+id/seekBarAngle"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/textsteer_angle"
-                android:max="360"
-                android:progress="180"
-                android:thumb="@drawable/thumb" />
-
-            <TextView
-                android:id="@+id/textsteer_angle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/steer_angle"
-                android:layout_centerHorizontal="true"
-                android:text="Steer angle"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/speed_keep"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_alignStart="@+id/textspeed_keep"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/speed_keep" />
-
-            <SeekBar
-                android:id="@+id/seekBarSpeed"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/textspeed_keep"
-                android:layout_alignParentStart="true"
-                android:max="85"
-                android:progress="10"
-                android:thumb="@drawable/thumb" />
-
-            <TextView
-                android:id="@+id/textspeed_keep"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/speed_keep"
-                android:layout_centerHorizontal="true"
-                android:text="Set speed"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-    </GridLayout>
+        </LinearLayout>
         <!--Status Stuff-->
 
             <TextView
@@ -554,8 +424,198 @@
                 android:layout_toEndOf="@+id/ivStatus"
                 android:src="@android:drawable/ic_menu_info_details" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            tools:context="it.scognito.abraboxabra.MainActivity"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:id="@+id/steer_angle"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignStart="@+id/textsteer_angle"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/steer_angle" />
+
+                <SeekBar
+                    android:id="@+id/seekBarAngle"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/textsteer_angle"
+                    android:max="360"
+                    android:progress="180"
+                    android:thumb="@drawable/thumb" />
+
+                <TextView
+                    android:id="@+id/textsteer_angle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/steer_angle"
+                    android:layout_centerHorizontal="true"
+                    android:text="Steer angle"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/value_steer_angle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="180°"
+                    android:textColor="@android:color/black" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:paddingTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/speed_keep"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignStart="@+id/textspeed_keep"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/speed_keep" />
+
+                <SeekBar
+                    android:id="@+id/seekBarSpeed"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/textspeed_keep"
+                    android:layout_alignParentStart="true"
+                    android:max="85"
+                    android:progress="10"
+                    android:thumb="@drawable/thumb" />
+
+                <TextView
+                    android:id="@+id/textspeed_keep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/speed_keep"
+                    android:layout_centerHorizontal="true"
+                    android:text="Set speed"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/value_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="20 mph"
+                    android:textColor="@android:color/black" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/speed_up"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/speed_up" />
+
+                    <SeekBar
+                        android:id="@+id/seekBarSpeedUp"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/textspeed_up"
+                        android:layout_alignParentStart="true"
+                        android:max="5"
+                        android:progress="3"
+                        android:thumb="@drawable/thumb" />
+
+                    <TextView
+                        android:id="@+id/textspeed_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/speed_up"
+                        android:layout_centerHorizontal="true"
+                        android:text="Speed up"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/brake_now"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/brake_now" />
+
+                    <SeekBar
+                        android:id="@+id/seekBarBreakStrength"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/textbrake_now"
+                        android:layout_alignParentStart="true"
+                        android:max="5"
+                        android:progress="3"
+                        android:thumb="@drawable/thumb" />
+
+                    <TextView
+                        android:id="@+id/textbrake_now"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/brake_now"
+                        android:layout_centerHorizontal="true"
+                        android:text="Brake now"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 
+<!--
 </HorizontalScrollView>
+-->
 
