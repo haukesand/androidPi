@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
     final String myUuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee";
     final int DEBUG_MSG_ERROR = 0, DEBUG_MSG_INFO = 1;
     private final String TAG = "ABRABOXABRA";
-    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep;
+    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep, light;
     SeekBar seekBarAngle, seekBarSpeed, seekBarSpeedUp, seekBarBrakeStrength;
     ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
     int steeringAngle = 180, speed = 20, acceleration = 3, brakeStrength = 3;
@@ -177,6 +177,7 @@ public class MainActivity extends Activity {
         start_moving = (ImageView) findViewById(R.id.start_moving);
         move_backwards = (ImageView) findViewById(R.id.move_backwards);
         lane_left = (ImageView) findViewById(R.id.lane_left);
+        light = (ImageView) findViewById(R.id.light_up);
         lane_right = (ImageView) findViewById(R.id.lane_right);
         depart_todestination = (ImageView) findViewById(R.id.depart_todestination);
         arrive_destination = (ImageView) findViewById(R.id.arrive_destination);
@@ -561,7 +562,23 @@ public class MainActivity extends Activity {
             }
         });
 
-
+        light.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                light.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    String message;
+                    if (!light.isActivated()) {
+                        message = composeMessage("light_up", loop.INF);
+                        light.setActivated(true);
+                    } else {
+                        message = composeMessage("light_up", loop.OFF);
+                        light.setActivated(false);
+                    }
+                    sendMessage(message);
+                }
+                return true;
+            }
+        });
        /* ivRemoveDevice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mConnectedThread != null) {
