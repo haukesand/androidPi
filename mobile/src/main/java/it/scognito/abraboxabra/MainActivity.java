@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
     final String myUuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee";
     final int DEBUG_MSG_ERROR = 0, DEBUG_MSG_INFO = 1;
     private final String TAG = "ABRABOXABRA";
-    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep, light;
+    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep, light, all_off;
     SeekBar seekBarAngle, seekBarSpeed, seekBarSpeedUp, seekBarBrakeStrength;
     ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
     int steeringAngle = 180, speed = 20, acceleration = 3, brakeStrength = 3;
@@ -178,6 +178,7 @@ public class MainActivity extends Activity {
         move_backwards = (ImageView) findViewById(R.id.move_backwards);
         lane_left = (ImageView) findViewById(R.id.lane_left);
         light = (ImageView) findViewById(R.id.light_up);
+        all_off = (ImageView) findViewById(R.id.all_off);
         lane_right = (ImageView) findViewById(R.id.lane_right);
         depart_todestination = (ImageView) findViewById(R.id.depart_todestination);
         arrive_destination = (ImageView) findViewById(R.id.arrive_destination);
@@ -317,7 +318,15 @@ public class MainActivity extends Activity {
                 return true;
             }
         });
-
+        all_off.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                all_off.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
+                    sendMessage(composeMessage("all", loop.OFF));
+                }
+                return true;
+            }
+        });
         move_backwards.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 move_backwards.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
