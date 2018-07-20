@@ -1,6 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/action_customize_animation" android:title="Customize Animation"
+        android:orderInCategory="10" app:showAsAction="always" />
     <item android:id="@+id/action_select_server" android:title="@string/select_server"
         android:orderInCategory="10" app:showAsAction="always" />
     <item android:id="@+id/action_enable_pairing" android:title="@string/add_remote"

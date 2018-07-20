@@ -18,4 +18,20 @@
     <string name="changelog_title">What\'s New</string>
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">more...</string>
+    <string name="duration">Duration / Speed:</string>
+    <string name="angle">Angle / Position:</string>
+    <string name="saturation_value">Saturation / Value:</string>
+    <string name="opacity">Opacity:</string>
+    <string name="strength_size_thickness">Strength / Size / Thickness:</string>
+    <string name="direction_side">Direction / Side:</string>
+    <string name="animationType">Animation Type:</string>
+    <string-array name="animations_array">
+        <item>Multi Strip Light Through</item>
+        <item>Strip Light Through</item>
+        <item>Light Rotate Around</item>
+        <item>Flank Light Pulse</item>
+        <item>Light Pulsate</item>
+        <item>Point Light Grow Shrink</item>
+        <item>Point Light Through</item>
+    </string-array>
 </resources>

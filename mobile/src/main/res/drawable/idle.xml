@@ -1,0 +1,12 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" >
+        <bitmap
+            android:src="@drawable/rainbow"
+            android:tint="@color/blue"
+            />
+    </item>
+    <item android:state_activated="true">
+        <bitmap android:layout_width="100dp" android:src="@drawable/rainbow" android:tint="@color/green" />
+    </item>
+    <item android:drawable="@drawable/rainbow"/>
+</selector>

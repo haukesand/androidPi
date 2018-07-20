@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
@@ -20,10 +21,18 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.OpacityBar;
+import com.larswerkman.holocolorpicker.SVBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +40,9 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends Activity {
+import static it.scognito.abraboxabra.R.id.opacitybar;
+
+public class CustomActivity extends Activity{
 
     final int HANDLE_STATUS = 0;
     final int HANDLE_RET_MSG = 1;
@@ -45,11 +56,17 @@ public class MainActivity extends Activity {
     final String myUuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee";
     final int DEBUG_MSG_ERROR = 0, DEBUG_MSG_INFO = 1;
     private final String TAG = "ABRABOXABRA";
-    ImageView start_moving, move_backwards, lane_left, lane_right, depart_todestination, arrive_destination, slow_down, speed_up, turn_right, turn_left, highway_enter, highway_leave, wait_trafficlight, wait_pedestrian, uneven_road, swerve_left, brake_now, speed_keep, light, all_off, Idle;
-    SeekBar seekBarSpeed, seekBarSpeedUp, seekBarBrakeStrength;
-    ImageView ivStatus, ivInfo; // ivSettings, , ivShutdown, ivPairing, ivRemoveDevice;
-    int steeringAngle = 180, speed = 20, acceleration = 3, brakeStrength = 3;
-    TextView tvLog, value_speed;
+    ImageView ivStatus, ivInfo;
+    TextView tvLog, last_change;
+    SeekBar seekSize, seekDuration, seekAngle, seekDirection;
+    Spinner spinner;
+    int steeringAngle = 180, speed = 20, duration = 2, size = 3 , direction = 0, lastColor =0;
+    long lastChange;
+
+    ColorPicker picker;
+    SVBar svBar;
+    OpacityBar opacityBar;
+
     String btServerAddr = null;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothDevice btDevice = null;
@@ -76,8 +93,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
+        Log.d("Start","Start custom activity");
+        setContentView(R.layout.activity_customize);
 
         getAbraboxabraAddress();
         setupViews();
@@ -174,64 +191,76 @@ public class MainActivity extends Activity {
     }
 
     public void setupViews() {
-
-        start_moving = (ImageView) findViewById(R.id.start_moving);
-        move_backwards = (ImageView) findViewById(R.id.move_backwards);
-        lane_left = (ImageView) findViewById(R.id.lane_left);
-        light = (ImageView) findViewById(R.id.light_up);
-        all_off = (ImageView) findViewById(R.id.all_off);
-        lane_right = (ImageView) findViewById(R.id.lane_right);
-        depart_todestination = (ImageView) findViewById(R.id.depart_todestination);
-        arrive_destination = (ImageView) findViewById(R.id.arrive_destination);
-        slow_down = (ImageView) findViewById(R.id.slow_down);
-        speed_up = (ImageView) findViewById(R.id.speed_up);
-        turn_right = (ImageView) findViewById(R.id.turn_right);
-        turn_left = (ImageView) findViewById(R.id.turn_left);
-        highway_enter = (ImageView) findViewById(R.id.highway_enter);
-        highway_leave = (ImageView) findViewById(R.id.highway_leave);
-        wait_pedestrian = (ImageView) findViewById(R.id.wait_pedestrian);
-        wait_trafficlight = (ImageView) findViewById(R.id.wait_trafficlight);
-        uneven_road = (ImageView) findViewById(R.id.uneven_road);
-        swerve_left = (ImageView) findViewById(R.id.swerve_left);
-        brake_now = (ImageView) findViewById(R.id.brake_now);
-        speed_keep = (ImageView) findViewById(R.id.speed_keep);
-        Idle = (ImageView) findViewById(R.id.idle);
-        seekBarSpeed = (SeekBar) findViewById(R.id.seekBarSpeed);
-        seekBarSpeedUp = (SeekBar) findViewById(R.id.seekBarSpeedUp);
-        seekBarBrakeStrength = (SeekBar) findViewById(R.id.seekBarBreakStrength);
-
         ivStatus = (ImageView) findViewById(R.id.ivStatus);
         ivInfo = (ImageView) findViewById(R.id.ivInfo);
-        /*
-        ivSettings = (ImageView) findViewById(R.id.ivSettings);
-        ivShutdown = (ImageView) findViewById(R.id.ivShutdown);
-        ivPairing = (ImageView) findViewById(R.id.ivEnablePairing);
-        ivRemoveDevice = (ImageView) findViewById(R.id.ivRemoveDevice);
-        */
-        value_speed = (TextView) findViewById(R.id.value_speed);
-
         tvLog = (TextView) findViewById(R.id.tvLog);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
-        //tvLog.setVisibility(View.VISIBLE);
 
-/*
-        autoPushOnConnect = (Switch) findViewById(R.id.switch1);
-        autoPushOnConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    setAutoPushOnConnect(true);
-                } else {
-                    setAutoPushOnConnect(false);
+        seekAngle = (SeekBar) findViewById(R.id.seekAngle);
+        seekDirection = (SeekBar) findViewById(R.id.seekDirection);
+        seekDuration = (SeekBar) findViewById(R.id.seekDuration);
+        seekSize = (SeekBar) findViewById(R.id.seekSize);
+        last_change = (TextView) findViewById(R.id.last_change);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.animations_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean isLoaded = false;
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (isLoaded) {
+                    String type = parentView.getItemAtPosition(position).toString();
+                    sendMessage("<Custom,type=" + type + ">");
+                    last_change.setText("type: " + type);
                 }
+                isLoaded = true;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        // Setup colorPicker
+        picker = (ColorPicker) findViewById(R.id.picker);
+        lastChange = System.currentTimeMillis();
+        svBar = (SVBar) findViewById(R.id.svbar);
+        opacityBar = (OpacityBar) findViewById(opacitybar);
+        picker.addSVBar(svBar);
+        picker.addOpacityBar(opacityBar);
+        picker.setShowOldCenterColor(false);
+        picker.setOnColorChangedListener(new ColorPicker.OnColorChangedListener()
+        {
+            @Override
+            public void onColorChanged(int color) {
+                last_change.setText("color: "+ color);
+                lastColor = color;
+
+
+                long difference = System.currentTimeMillis() - lastChange;
+
+                if (difference > 500)
+                {  // do not send on every color change
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            sendMessage("<Custom,color=" +lastColor+">");
+                        }
+                    }, 500);}
             }
         });
-*/
-        //seekbars
-
-        seekBarBrakeStrength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        
+        seekAngle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                sendMessage("<Custom,angle=" +steeringAngle+">");
+
             }
 
             @Override
@@ -240,13 +269,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                brakeStrength = progress;
-                }
+                steeringAngle = progress;
+                last_change.setText("steeringAngle: "+ steeringAngle);
+
+            }
         });
-        seekBarSpeedUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekDirection.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                sendMessage("<Custom,direction=" +direction+">");
+
             }
 
             @Override
@@ -255,13 +288,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                acceleration = progress;
-             }
+                direction = progress;
+                last_change.setText("direction: "+ direction);
+
+            }
         });
-        seekBarSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                sendMessage("<Custom,size=" +size+">");
+
             }
 
             @Override
@@ -270,15 +307,19 @@ public class MainActivity extends Activity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = progress;
-                value_speed.setText(progress+" mph");
+                size = progress;
+                last_change.setText("size: "+ size);
+
+                //last_change.setText(progress+" mph");
             }
         });
 
-        seekBarBrakeStrength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                sendMessage("<Custom,duration=" +duration+">");
+
             }
 
             @Override
@@ -287,334 +328,12 @@ public class MainActivity extends Activity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                brakeStrength = progress;
-            }
-        });
-        //Actual push button event
+                duration = progress;
+                last_change.setText("duration: "+ duration);
 
-        Idle.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                Idle.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!Idle.isActivated()) {
-                        message = composeMessage("idle", loop.INF);
-                        Idle.setActivated(true);
-                    } else {
-                        message = composeMessage("idle", loop.OFF);
-                        Idle.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
             }
         });
 
-        start_moving.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                start_moving.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("start_moving", loop.ONE, steeringAngle));
-                }
-                return true;
-            }
-        });
-        all_off.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                all_off.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("all", loop.OFF));
-                }
-                return true;
-            }
-        });
-        move_backwards.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                move_backwards.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!move_backwards.isActivated()) {
-                        message = composeMessage("move_backwards", loop.INF, steeringAngle);
-                        move_backwards.setActivated(true);
-                    } else {
-                        message = composeMessage("move_backwards", loop.OFF);
-                        move_backwards.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        lane_left.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                lane_left.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("lane_left", loop.ONE));
-                }
-                return true;
-            }
-        });
-
-        lane_right.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                lane_right.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("lane_right", loop.ONE));
-                }
-                return true;
-            }
-        });
-
-        depart_todestination.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                depart_todestination.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("depart_todestination", loop.ONE));
-                }
-                return true;
-            }
-        });
-
-        arrive_destination.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                arrive_destination.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("arrive_destination", loop.ONE));
-                }
-                return true;
-            }
-        });
-
-        slow_down.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                slow_down.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!slow_down.isActivated()) {
-                        message = composeMessage("slow_down", loop.INF);
-                        slow_down.setActivated(true);
-                    } else {
-                        message = composeMessage("slow_down", loop.OFF);
-                        slow_down.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-
-        speed_up.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                speed_up.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!speed_up.isActivated()) {
-                        message = composeMessage("speed_up", loop.INF, acceleration, steeringAngle);
-                        speed_up.setActivated(true);
-                    } else {
-                        message = composeMessage("speed_up", loop.OFF);
-                        speed_up.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        turn_left.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                turn_left.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!turn_left.isActivated()) {
-                        message = composeMessage("turn_left", loop.INF);
-                        turn_left.setActivated(true);
-                    } else {
-                        message = composeMessage("turn_left", loop.OFF);
-                        turn_left.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        turn_right.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                turn_right.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!turn_right.isActivated()) {
-                        message = composeMessage("turn_right", loop.INF);
-                        turn_right.setActivated(true);
-                    } else {
-                        message = composeMessage("turn_right", loop.OFF);
-                        turn_right.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        highway_enter.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                highway_enter.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("highway_enter", 3.0f));
-                }
-                return true;
-            }
-        });
-
-        highway_leave.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                highway_leave.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("highway_leave", 3.0f));
-                }
-                return true;
-            }
-        });
-
-        wait_trafficlight.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                wait_trafficlight.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!wait_trafficlight.isActivated()) {
-                        message = composeMessage("wait_trafficlight", loop.INF);
-                        wait_trafficlight.setActivated(true);
-                    } else {
-                        message = composeMessage("wait_trafficlight", loop.OFF);
-                        wait_trafficlight.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        wait_pedestrian.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                wait_pedestrian.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!wait_pedestrian.isActivated()) {
-                        message = composeMessage("wait_pedestrian", loop.INF);
-                        wait_pedestrian.setActivated(true);
-                    } else {
-                        message = composeMessage("wait_pedestrian", loop.OFF);
-                        wait_pedestrian.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-
-                return true;
-            }
-        });
-
-        uneven_road.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                uneven_road.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!uneven_road.isActivated()) {
-                        message = composeMessage("uneven_road", loop.INF);
-                        uneven_road.setActivated(true);
-                    } else {
-                        message = composeMessage("uneven_road", loop.OFF);
-                        uneven_road.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        swerve_left.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                swerve_left.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("swerve_left", loop.ONE));
-                }
-                return true;
-            }
-        });
-
-        brake_now.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                brake_now.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    sendMessage(composeMessage("brake_now", 2.0f, brakeStrength, steeringAngle));
-                }
-                return true;
-            }
-        });
-
-        speed_keep.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                speed_keep.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!speed_keep.isActivated()) {
-                        message = composeMessage("speed_keep", loop.INF, speed, steeringAngle);
-                        speed_keep.setActivated(true);
-                    } else {
-                        message = composeMessage("speed_keep", loop.OFF);
-                        speed_keep.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-
-        light.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                light.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    String message;
-                    if (!light.isActivated()) {
-                        message = composeMessage("light_up", loop.INF);
-                        light.setActivated(true);
-                    } else {
-                        message = composeMessage("light_up", loop.OFF);
-                        light.setActivated(false);
-                    }
-                    sendMessage(message);
-                }
-                return true;
-            }
-        });
-       /* ivRemoveDevice.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mConnectedThread != null) {
-                    mConnectedThread.write("device_list".getBytes());
-                    puppaLog(DEBUG_MSG_INFO, "Sending command");
-                }
-            }
-        });
-
-        ivShutdown.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                askShutdown();
-            }
-        });
-
-        ivPairing.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                enablePairing();
-            }
-        });
-
-        ivSettings.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                selectBtDevice();
-            }
-        });*/
 
         ivInfo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -636,34 +355,6 @@ public class MainActivity extends Activity {
         });
     }
 
-    private String composeMessage(String Mode, loop loopCount, int strength, int angle) {
-        String Message = ("<" + Mode + ",loop=" + loopCount.getValue() + ",strength=" + strength + ",angle=" + angle + ">");
-        return Message;
-    }
-
-
-    //compose messages
-
-    private String composeMessage(String Mode, float loopCount, int strength, int angle) {
-        String Message = ("<" + Mode + ",loop=" + loopCount + ",strength=" + strength + ",angle=" + angle + ">");
-        return Message;
-    }
-
-    private String composeMessage(String Mode, float loopCount) {
-        String Message = ("<" + Mode + ",loop=" + loopCount + ">");
-        return Message;
-    }
-
-    private String composeMessage(String Mode, loop loopCount, int angle) {
-        String Message = ("<" + Mode + ",loop=" + loopCount.getValue() + ",angle=" + angle + ">");
-        return Message;
-    }
-
-    private String composeMessage(String Mode, loop loopCount) {
-        String Message = ("<" + Mode + ",loop=" + loopCount.getValue() + ">");
-        return Message;
-    }
-
     private void sendMessage(String message) {
         if (mConnectedThread != null) {
             mConnectedThread.write(message.getBytes());
@@ -673,7 +364,15 @@ public class MainActivity extends Activity {
         }
 
     }
+    private void sendDelayedMessage(String message) {
+        if (mConnectedThread != null) {
+            mConnectedThread.write(message.getBytes());
+            puppaLog(DEBUG_MSG_INFO, "send: " + message);
+        } else {
+            puppaLog(DEBUG_MSG_INFO, message);
+        }
 
+    }
     private void setBtServer(String addr) {
         btServerAddr = addr;
         if (btQueryPairedDevices()) {
@@ -960,10 +659,6 @@ public class MainActivity extends Activity {
             case R.id.action_shutdown:
                 askShutdown();
                 return true;
-            case R.id.action_customize_animation:
-                Intent i = new Intent(MainActivity.this, CustomActivity.class);
-                finish();  //Kill the activity from which you will go to next activity
-                startActivity(i);
             default:
                 return super.onOptionsItemSelected(item);
         }
